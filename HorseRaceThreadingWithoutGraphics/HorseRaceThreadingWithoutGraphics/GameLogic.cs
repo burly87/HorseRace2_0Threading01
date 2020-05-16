@@ -16,16 +16,19 @@ namespace HorseRaceThreadingWithoutGraphics
         public List<string> deck;
         public List<string> discardPile = new List<string>();           // pile to save every drawn card to swap later with deckpile so we can start from begining. dont forget to shuffle again
 
+        // ------ Draw related ------
+        public static int[,] grid = new int[22, 11];
+
+
         public void StartGame()
         {
-            Console.WriteLine("Gamelogic Started");
+            //Console.WriteLine("Gamelogic Started");
             //draw Table
             DrawTable();
             //Generate deck with all cards except Jacks
             deck = GenerateDeck();
             // shuffle that deck
             Shuffle(deck);
-
 
             // instantiate deckpile
             //DealCards();
@@ -40,17 +43,33 @@ namespace HorseRaceThreadingWithoutGraphics
         /// </summary>
         void DrawTable()
         {
-            Console.WriteLine("\n\nxxxxxxxxxxxxxxxxxxxxxx");
-            Console.WriteLine("xx1x2x3x4x5x6x7x8x9xxx");
-            Console.WriteLine("C__________________||x");
-            Console.WriteLine("x                  ||x");
-            Console.WriteLine("D__________________||x");
-            Console.WriteLine("x                  ||x");
-            Console.WriteLine("H__________________||x");
-            Console.WriteLine("x                  ||x");
-            Console.WriteLine("S__________________||discard");
-            Console.WriteLine("x                  ||Deck");
-            Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxx\n\n");
+            for (int raceTrackHight = 0; raceTrackHight <= 22; raceTrackHight++)
+            {
+                Console.SetCursorPosition(raceTrackHight,0);
+                Console.Write("x");
+                Console.SetCursorPosition(raceTrackHight, 11);
+                Console.Write("x");
+            }
+            for (int raceTrackWidth = 0; raceTrackWidth <=11; raceTrackWidth++)
+            {
+                Console.SetCursorPosition(0, raceTrackWidth);
+                Console.Write("x");
+                Console.SetCursorPosition(22, raceTrackWidth);
+                Console.Write("x");
+            }
+
+
+            //Console.WriteLine("\n\nxxxxxxxxxxxxxxxxxxxxxx");
+            //Console.WriteLine("xx1x2x3x4x5x6x7x8x9xxx");
+            //Console.WriteLine("C__________________||x");
+            //Console.WriteLine("x                  ||x");
+            //Console.WriteLine("D__________________||x");
+            //Console.WriteLine("x                  ||x");
+            //Console.WriteLine("H__________________||x");
+            //Console.WriteLine("x                  ||x");
+            //Console.WriteLine("S__________________||discard");
+            //Console.WriteLine("x                  ||Deck");
+            //Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxx\n\n");
 
         }
 
@@ -58,7 +77,7 @@ namespace HorseRaceThreadingWithoutGraphics
         /// <returns></returns>
         public List<string> GenerateDeck()
         {
-            Console.WriteLine("Generating Deck...");
+            Console.WriteLine("\nGenerating Deck...");
             List<string> newDeck = new List<string>();
             foreach (string s in suits)
             {
