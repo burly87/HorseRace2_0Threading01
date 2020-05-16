@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 namespace HorseRaceThreadingWithoutGraphics
 {
-    class Program
+    class ThreadController
     {
+        static GameLogic gameLogic;
+
+
         static void Main(string[] args)
         {
+            gameLogic = new GameLogic();
+            gameLogic.StartGame();
 
 
+
+            Console.ReadLine();
         }
     }
 }
