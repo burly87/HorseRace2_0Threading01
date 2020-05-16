@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,7 +20,9 @@ namespace HorseRaceThreadingVersion
         private int cardWidth = 80;                         // card size x
         private int cardHeight = 117;                       // card size y
         private int offsetY = 15;                           // space between cards
-        private string pathToSprites = (@"D:\Workspace\Sligo\AdvancedProgramming\WPF_HorseRace\HorseRaceThreadingVersion\HorseRaceThreadingVersion\Sprites\");
+        private string pathToSprites = (@"D:\Workspace\Sligo\AdvancedProgramming\HorsRace2_Threading01\HorseRace2_0Threading01\HorseRaceThreadingVersion\HorseRaceThreadingVersion\Sprites\");
+        //string pathToSprites = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Sprites\");
+        //string[] pathToSprites = System.IO.Directory.GetFiles("../../Sprites/");
         
         // HorseCards
         private Bitmap horse1, horse2,horse3,horse4;                // jacks / horses cardSprites        
@@ -54,6 +58,7 @@ namespace HorseRaceThreadingVersion
 
         // --------  ----------
         GameLogic gameLogic;
+
 
         public Form1()
         {
