@@ -28,3 +28,12 @@ D:\Workspace\Sligo\AdvancedProgramming\HorsRace2_Threading01\HorseRace2_0Threadi
 D:\Workspace\Sligo\AdvancedProgramming\HorsRace2_Threading01\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.csproj.CoreCompileInputs.cache
 D:\Workspace\Sligo\AdvancedProgramming\HorsRace2_Threading01\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.exe
 D:\Workspace\Sligo\AdvancedProgramming\HorsRace2_Threading01\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.pdb
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\bin\Debug\ThreadingProject.exe.config
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\bin\Debug\ThreadingProject.exe
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\bin\Debug\ThreadingProject.pdb
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.csprojAssemblyReference.cache
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.Form1.resources
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.Properties.Resources.resources
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.csproj.GenerateResource.cache
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.exe
+C:\MEINS\Workspace\Sligo\Advanced Programming\Abgabe\HorseRace2_0Threading01\ThreadingProject\ThreadingProject\obj\Debug\ThreadingProject.pdb

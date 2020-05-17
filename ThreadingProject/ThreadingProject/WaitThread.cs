@@ -47,7 +47,7 @@ namespace ThreadingProject
         }
 
         /// <summary>
-        /// Create thread which runs DoWork()
+        /// Create thread which runs DoWork(). Index decide which action to run. 1 is Threads, 2 ThreadsQueue , 3 BackgroundWorker
         /// </summary>
         public void Start(int i)
         {
@@ -63,7 +63,7 @@ namespace ThreadingProject
         }
 
         /// <summary>
-        /// Interrupt 
+        /// Interrupt called by button startStop_click
         /// </summary>
         public void Abort() 
         {
