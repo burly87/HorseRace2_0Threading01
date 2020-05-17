@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ThreadingProject
 {
     public class ThreadEventArgs : EventArgs
     {
-        public int status; //Status 1 = finished / Status 2 = aborted / Status 3 = error
+        //Status 1 = finished ; Status 2 = aborted ; Status 3 = error
+        public int status; 
 
         public ThreadEventArgs(int status)
         {
@@ -18,12 +20,15 @@ namespace ThreadingProject
         }
     }
 
-    class WaitThread //Uses Threads
+    //using Threads 
+    class WaitThread 
     {
-        Thread mainWorker;
-        int time;
-        int threadCount;
-        bool abort;
+        private Thread mainThread;
+
+        //[ThreadStatic]
+        private int time;
+        private int threadCount;
+        private bool abort;
 
         public event EventHandler<ThreadEventArgs> threadCallBack;
 
@@ -32,71 +37,129 @@ namespace ThreadingProject
             this.threadCallBack += form.onThreadEvent;
         }
 
-        public void setTime(int time, int threadCount)
+        /// <summary>
+        /// set Time to run and count of threads
+        /// </summary>
+        public void SetTime(int time, int threadCount)
         {
             this.threadCount = threadCount;
             this.time = time;
         }
 
-        public void start()
+        /// <summary>
+        /// Create thread which runs DoWork()
+        /// </summary>
+        public void Start(int i)
         {
             abort = false;
-            mainWorker = new Thread(DoWork); // new Thread for the Work to have Responsiveness
-            mainWorker.Start();
+            mainThread = new Thread(new ParameterizedThreadStart(DoWork));
+            mainThread.Name = "MainThread";
+            mainThread.Start(i);
         }
 
-        protected virtual void onThreadEvent(int status)
+        protected virtual void OnThreadEvent(int status)
         {
             threadCallBack(this, new ThreadEventArgs(status)); // Raise Event
         }
 
-        public void Abort() //Use Boolean for Graceful Interrupt
+        /// <summary>
+        /// Interrupt 
+        /// </summary>
+        public void Abort() 
         {
             abort = true;
         }
 
-        private void DoWork()
+        private void DoWork(object index)
         {
-            WaitHandle[] waitHandles = new WaitHandle[threadCount]; //create a waitHandle Array to sync threads.
-            for (int i = 0; i < threadCount; i++)
+            //create a waitHandle Array to sync threads.
+            WaitHandle[] waitHandles = new WaitHandle[threadCount];
+            
+            // index == 1 means synced Threads
+            if((int)index == 1)
             {
-                var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
-                var thread = new Thread(() => //Creating threads for doing the work as the user selected
+                for (int i = 0; i < threadCount; i++)
                 {
-                    int tempTime = time / threadCount;
-
-                    while(tempTime > 0)
+                    var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+                
+                    //Creating threads
+                    var thread = new Thread(() => 
                     {
-                        if (abort)
+                        int tmpTime = time / threadCount;
+
+                        while(tmpTime > 0)
                         {
-                            break;
+                            if (abort)
+                            {
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                            tmpTime = tmpTime-1000;
                         }
-                        Thread.Sleep(1000);
-                        tempTime = tempTime-1000;
-                    }
-                    handle.Set();
-                });
-                waitHandles[i] = handle;
-                thread.Start();
+                        handle.Set();
+                    });
+                    waitHandles[i] = handle;
+                    thread.Start();
+                }
             }
-            WaitHandle.WaitAll(waitHandles); //wait for all threads to finish / Block Main-WorkerThread till done!
+            // index == 2 means thread Queue
+            else if((int)index == 2)
+            {
+                for (int i = 0; i < threadCount; i++)
+                {
+                    var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+                    bool hasFinised = false;
+
+                    //Creating threads
+                    var thread = new Thread(() =>
+                    {
+                        int tmpTime = time / threadCount;
+                        while (tmpTime > 0)
+                        {
+                            if (abort)
+                            {
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                            tmpTime = tmpTime - 1000;                            
+                        }
+
+                        hasFinised = true;
+
+                        if (hasFinised)
+                        {
+                            handle.Set();
+                            // handle.WaitOne();
+                        }
+                    });                   
+                  
+
+                    waitHandles[i] = handle;
+                    thread.Start();
+                }
+            }
+
+            //wait for all threads to finish and blocks Main-WorkerThread till that moment
+            WaitHandle.WaitAll(waitHandles); 
             if (abort != true)
             {
-                onThreadEvent(1);
+                OnThreadEvent(1);
             }
             else if (abort == true)
             {
-                onThreadEvent(2);
+                OnThreadEvent(2);
             }
             else
             {
-                onThreadEvent(3);
+                OnThreadEvent(3);
             }
         }
 
-        public void Join() //Block to wait till Worker Thread is done
-        {
-           mainWorker.Join(); 
-        }
+        //Block to wait till Worker Thread is done
+        //public void Join() 
+        //{
+        //   MessageBox.Show("Join used");
+        //   mainWorker.Join(); 
+        //}
     }
 }

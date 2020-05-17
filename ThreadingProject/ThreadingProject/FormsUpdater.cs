@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace ThreadingProject
 {
-    class FormsUpdater : CallBackBW //implements the CallBackBW for my WaitBW
+    class FormsUpdater : ICallBackBW //implements the CallBackBW Interface for the WaitBW
     {
 
         private int time;
@@ -25,26 +25,28 @@ namespace ThreadingProject
 
         public void Aborted()
         {
-            mainClass.setTotalTimeLabel("Aborted");
-            mainClass.blockControls(false);
+            mainClass.SetTotalTimeLabel("Aborted");
+            mainClass.BlockControls(false);
         }
 
         public void Error()
         {
-            mainClass.setTotalTimeLabel("Error!");
-            mainClass.blockControls(false);
+            mainClass.SetTotalTimeLabel("Error!");
+            mainClass.BlockControls(false);
         }
 
+        
         public void Finished()
         {
-            mainClass.setTotalTimeLabel("Done! It took " + time +" ms.");
-            mainClass.blockControls(false);
+            mainClass.SetTotalTimeLabel("Done! It took " + time +" ms.");
+            mainClass.WriteToIso(time);
+            mainClass.BlockControls(false);
         }
 
         public void UpdateGlobal()
         {
             time = time + 10;
-            mainClass.setTotalTimeLabel("Combined time elasped: " + time + " ms.");
+            mainClass.SetTotalTimeLabel("Combined time elasped: " + time + " ms.");
         }
     }
 }

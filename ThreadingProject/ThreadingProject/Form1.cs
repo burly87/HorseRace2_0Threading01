@@ -14,13 +14,16 @@ namespace ThreadingProject
 {
     public partial class Form1 : Form
     {
-        ArrayList bwArray;
-        ArrayList threadLabels;             // List of labels displayed in FlowLayoutPanel mainPanel
-        FormsUpdater formsUpdater;
-        WaitThread wT;
+        private ArrayList bwArray;
+        private ArrayList threadLabels;             // List of labels displayed in FlowLayoutPanel mainPanel
+        private FormsUpdater formsUpdater;
+        private WaitThread wT;
 
+        // Isolated Storage
+        private IsoStorageHandler isoStorageHandler;
 
-        bool started = false;
+        // start button Pressed
+        bool isRunning = false;
 
         public Form1()
         {
@@ -42,7 +45,8 @@ namespace ThreadingProject
             //Dictionary choises to populate the threads CB
             Dictionary<int, string> choices = new Dictionary<int, string>();
             choices.Add(1, "Threads");
-            choices.Add(2, "Background Worker");
+            choices.Add(2, "Threads Queue");
+            choices.Add(3, "Background Worker");
 
             //comboBox threads to pick if BW or Threads to run
             threads.DataSource = new BindingSource(choices, null);
@@ -50,19 +54,22 @@ namespace ThreadingProject
             threads.ValueMember = "Key";
             threads.SelectedIndex = 0;
 
+            //Isolated Storage
+            isoStorageHandler = new IsoStorageHandler();
+
         }
 
         /// <summary>
         /// Update FlowLayoutPanel mainPanel to display if in Thread or BachgroundWorker mode
         /// </summary>
-        private void updateView()
+        private void UpdateView()
         {
             if (threads.SelectedItem != null && number.SelectedItem != null) //For first Start
             {
                 var selectedItem = (KeyValuePair<int, string>)threads.SelectedItem;
 
                 //select Threads
-                if (selectedItem.Key == 1)
+                if (selectedItem.Key == 1 || selectedItem.Key == 2)
                 {
                     mainPanel.Controls.Clear();
 
@@ -91,7 +98,8 @@ namespace ThreadingProject
 
                     }
                 }
-                else // select BachgroundWorker 
+                // select BachgroundWorker 
+                else
                 {
                     mainPanel.Controls.Clear();
                     bwArray = new ArrayList();
@@ -123,6 +131,7 @@ namespace ThreadingProject
 
                     }
                 }
+                
             }
 
         }
@@ -131,14 +140,14 @@ namespace ThreadingProject
         /// en or disable elements of Form while running 
         /// </summary>
         /// <param name="disable"></param>
-        public void blockControls(bool disable) 
+        public void BlockControls(bool disable) 
         {
             if (disable)
             {
                 threads.Enabled = false;
                 number.Enabled = false;
                 timer.Enabled = false;
-                started = true;
+                isRunning = true;
                 startStop.Text = "Stop";
             }
             else
@@ -146,7 +155,7 @@ namespace ThreadingProject
                 threads.Enabled = true;
                 number.Enabled = true;
                 timer.Enabled = true;
-                started = false;
+                isRunning = false;
                 startStop.Text = "Start";
             }
 
@@ -159,23 +168,26 @@ namespace ThreadingProject
         /// <param name="e"></param>
         private void startStop_Click(object sender, EventArgs e)
         {
+            // get Item from ComboBox to decide what to do
             var selectedItem = (KeyValuePair<int, string>)threads.SelectedItem;
+            // get time placed in timer
             int time = ((int)timer.Value * 1000);
+            // get number of Threads selected (max 4)
             int numberOfThreads = (int)number.SelectedItem;
 
-            if (!started)
+            if (!isRunning)
             {
                 totalTime.Text = ""; // Reset Labels!
                 // Test if Start is divideable by No. of Threads so they can share the work
                 if (time % numberOfThreads == 0)
                 {
-                    if (selectedItem.Key == 1)
+                    if (selectedItem.Key == 1 || selectedItem.Key == 2)
                     {
 
                         //wT = new WaitThread(time/numberOfThreads, numberOfThreads, this);
-                        wT.setTime(time, numberOfThreads);
-                        wT.start();
-                        blockControls(true);
+                        wT.SetTime(time, numberOfThreads);
+                        wT.Start(selectedItem.Key);
+                        BlockControls(true);
                         foreach (Label label in threadLabels)
                         {
                             label.Text = "Running for " + time / numberOfThreads + " ms";
@@ -185,7 +197,7 @@ namespace ThreadingProject
                     //BackgroundWorker
                     else
                     {
-                        blockControls(true);
+                        BlockControls(true);
                         formsUpdater.Reset(); //Reset FormsUpdater for the next start
                         for (int i = 0; i < bwArray.Count; i++)
                         {
@@ -213,7 +225,7 @@ namespace ThreadingProject
                         WaitBW bw = (WaitBW)bwArray[i];
                         bw.InterruptWorker(); //Interrupt Background Worker
                     }
-                    blockControls(false);
+                    BlockControls(false);
                 }
 
             }
@@ -223,20 +235,20 @@ namespace ThreadingProject
 
         private void threads_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateView();
+            UpdateView();
         }
 
         private void number_SelectedIndexChanged(object sender, EventArgs e)
         {
-            updateView();
+            UpdateView();
         }
 
-        public void setTotalTimeLabel(String text)
+        public void SetTotalTimeLabel(String text)
         {
             totalTime.Text = text;
         }
 
-        public void setAllThreadLabels(String text)
+        public void SetAllThreadLabels(String text)
         {
             foreach (Label label in threadLabels)
             {
@@ -256,52 +268,74 @@ namespace ThreadingProject
                 // status finished work -> set labels
                 if (args.status == 1)
                 {
-                    labelHandler del = new labelHandler(setAllThreadLabels);
-                    this.Invoke(del, new object[] { "Finished!" });
+                    labelHandler del = new labelHandler(SetAllThreadLabels);
+                    this.Invoke(del, new object[] 
+                    { 
+                        "Finished!"
+                    });
 
-                    del = new labelHandler(setTotalTimeLabel);
-                    this.Invoke(del, new object[] { "All Threads are finished!" });
+                    del = new labelHandler(SetTotalTimeLabel);
+                    this.Invoke(del, new object[] 
+                    {
+                        "All Threads are finished!" 
+                    });
                 }
                 // abored called -> set labels 
                 else if (args.status == 2)
                 {
-                    labelHandler del = new labelHandler(setAllThreadLabels);
-                    this.Invoke(del, new object[] { "Aborted!" });
+                    labelHandler del = new labelHandler(SetAllThreadLabels);
+                    this.Invoke(del, new object[] 
+                    {
+                        "Aborted!"
+                    });
 
-                    del = new labelHandler(setTotalTimeLabel);
-                    this.Invoke(del, new object[] { "This Action was aborted!" });
+                    del = new labelHandler(SetTotalTimeLabel);
+                    this.Invoke(del, new object[] 
+                    { 
+                        "This Action was aborted!"
+                    });
                 }
                 // Error occured -> set labels
                 else
                 {
-                    labelHandler del = new labelHandler(setAllThreadLabels);
+                    labelHandler del = new labelHandler(SetAllThreadLabels);
                     this.Invoke(del, new object[] { "Error!" });
 
-                    del = new labelHandler(setTotalTimeLabel);
+                    del = new labelHandler(SetTotalTimeLabel);
                     this.Invoke(del, new object[] { "An error occured!" });
                 }
-                controlsHandler cDel = new controlsHandler(blockControls);
+                controlsHandler cDel = new controlsHandler(BlockControls);
                 this.Invoke(cDel, new object[] { false });
             }
             else
             {
                 if (args.status == 1)
                 {
-                    setAllThreadLabels("Aborted!");
-                    setTotalTimeLabel("All Threads are finished");
+                    SetAllThreadLabels("Aborted!");
+                    SetTotalTimeLabel("All Threads are finished");
                 }
                 else if (args.status == 2)
                 {
-                    setAllThreadLabels("Aborted!");
-                    setTotalTimeLabel("This action was aborted!");
+                    SetAllThreadLabels("Aborted!");
+                    SetTotalTimeLabel("This action was aborted!");
                 }
                 else
                 {
-                    setAllThreadLabels("Error!");
-                    setTotalTimeLabel("An error occured!");
+                    SetAllThreadLabels("Error!");
+                    SetTotalTimeLabel("An error occured!");
                 }
-                blockControls(false);
+                BlockControls(false);
             }
+        }
+
+        // Isolated Storage
+        /// <summary>
+        /// Write to Iso Storage
+        /// </summary>
+        /// <param name="time"></param>
+        public void WriteToIso(int time)
+        {
+            isoStorageHandler.WriteToStorage(time);
         }
 
         private void Form1_Load(object sender, EventArgs e)
