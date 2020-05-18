@@ -105,6 +105,24 @@ namespace ThreadingProject
             // index == 2 means thread Queue
             else if((int)index == 2)
             {
+                //Thread[] threads = new Thread[threadCount];
+
+                //threads[threadCount-threadCount] = new Thread(
+                //    ()=>
+                //    {
+                //        MessageBox.Show(""+ (threadCount - threadCount));
+                //    });
+
+                //waitHandles[0] = handle;
+                //for (int i = 0; i < threadCount; i++)
+                //{
+                //    threads[i] = new Thread(() =>
+                //    { 
+
+
+                //    });
+                //}
+
                 for (int i = 0; i < threadCount; i++)
                 {
                     var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
@@ -131,8 +149,7 @@ namespace ThreadingProject
                             handle.Set();
                             // handle.WaitOne();
                         }
-                    });                   
-                  
+                    });       
 
                     waitHandles[i] = handle;
                     thread.Start();
