@@ -43,7 +43,7 @@
             // btn_StartStop
             // 
             this.btn_StartStop.Location = new System.Drawing.Point(435, 17);
-            this.btn_StartStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_StartStop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_StartStop.Name = "btn_StartStop";
             this.btn_StartStop.Size = new System.Drawing.Size(81, 36);
             this.btn_StartStop.TabIndex = 0;
@@ -55,7 +55,7 @@
             // 
             this.cb_ThreadCount.FormattingEnabled = true;
             this.cb_ThreadCount.Location = new System.Drawing.Point(127, 25);
-            this.cb_ThreadCount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cb_ThreadCount.Margin = new System.Windows.Forms.Padding(2);
             this.cb_ThreadCount.Name = "cb_ThreadCount";
             this.cb_ThreadCount.Size = new System.Drawing.Size(53, 21);
             this.cb_ThreadCount.TabIndex = 1;
@@ -65,7 +65,7 @@
             // 
             this.cb_TypeOfThread.FormattingEnabled = true;
             this.cb_TypeOfThread.Location = new System.Drawing.Point(127, 4);
-            this.cb_TypeOfThread.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cb_TypeOfThread.Margin = new System.Windows.Forms.Padding(2);
             this.cb_TypeOfThread.Name = "cb_TypeOfThread";
             this.cb_TypeOfThread.Size = new System.Drawing.Size(184, 21);
             this.cb_TypeOfThread.TabIndex = 2;
@@ -94,7 +94,7 @@
             // mainPanel
             // 
             this.mainPanel.Location = new System.Drawing.Point(8, 57);
-            this.mainPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.mainPanel.Margin = new System.Windows.Forms.Padding(2);
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(517, 191);
             this.mainPanel.TabIndex = 7;
@@ -111,7 +111,7 @@
             // num_Timer
             // 
             this.num_Timer.Location = new System.Drawing.Point(320, 26);
-            this.num_Timer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.num_Timer.Margin = new System.Windows.Forms.Padding(2);
             this.num_Timer.Name = "num_Timer";
             this.num_Timer.Size = new System.Drawing.Size(80, 20);
             this.num_Timer.TabIndex = 10;
@@ -141,7 +141,7 @@
             this.Controls.Add(this.cb_TypeOfThread);
             this.Controls.Add(this.cb_ThreadCount);
             this.Controls.Add(this.btn_StartStop);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

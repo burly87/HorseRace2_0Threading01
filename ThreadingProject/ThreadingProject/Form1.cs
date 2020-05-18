@@ -16,7 +16,7 @@ namespace ThreadingProject
     {
         private ArrayList bwArray;
         private ArrayList threadLabels;             // List of labels displayed in FlowLayoutPanel mainPanel
-        private FormsUpdater formsUpdater;
+        private FormsUpdater formsUpdater;          
         private WaitThread wT;
 
         // Isolated Storage
@@ -161,22 +161,21 @@ namespace ThreadingProject
         }
 
         /// <summary>
-        /// Btn to stop running 
+        /// Btn to start and stop running 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void startStop_Click(object sender, EventArgs e)
         {
             // get Item from ComboBox to decide what to do
             var selectedItem = (KeyValuePair<int, string>)cb_TypeOfThread.SelectedItem;
-            // get time placed in timer
+            // get time placed in timer and multiplied by 1000 to get seconds
             int time = ((int)num_Timer.Value * 1000);
             // get number of Threads selected (max 4)
             int numberOfThreads = (int)cb_ThreadCount.SelectedItem;
 
             if (!isRunning)
             {
-                totalTime.Text = ""; // Reset Labels!
+                // Reset Labels
+                totalTime.Text = ""; 
                 // Test if Start is divideable by No. of Threads so they can share the work
                 if (time % numberOfThreads == 0)
                 {
@@ -197,7 +196,8 @@ namespace ThreadingProject
                     else
                     {
                         BlockControls(true);
-                        formsUpdater.Reset(); //Reset FormsUpdater for the next start
+                        //Reset FormsUpdater for the next start
+                        formsUpdater.Reset(); 
                         for (int i = 0; i < bwArray.Count; i++)
                         {
                             WaitBW bw = (WaitBW)bwArray[i];
@@ -232,6 +232,9 @@ namespace ThreadingProject
 
         // ------- Event handler --------
 
+        /// <summary>
+        /// Update view if index of cb_TypeOfThreads or cb_ThreadCount has changed
+        /// </summary>
         private void threads_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateView();
@@ -242,6 +245,9 @@ namespace ThreadingProject
             UpdateView();
         }
 
+        /// <summary>
+        /// set totalTime label and each threadLabel
+        /// </summary>
         public void SetTotalTimeLabel(String text)
         {
             totalTime.Text = text;
@@ -255,6 +261,7 @@ namespace ThreadingProject
             }
         }
 
+        // delegates to handel labels onThreadEvent
         public delegate void labelHandler(String text);
         public delegate void controlsHandler(bool b);
 
@@ -310,7 +317,7 @@ namespace ThreadingProject
             {
                 if (args.status == 1)
                 {
-                    SetAllThreadLabels("Aborted!");
+                    SetAllThreadLabels("Finished!");
                     SetTotalTimeLabel("All Threads are finished");
                 }
                 else if (args.status == 2)
@@ -325,17 +332,7 @@ namespace ThreadingProject
                 }
                 BlockControls(false);
             }
-        }
-
-        // Isolated Storage
-        /// <summary>
-        /// Write to Iso Storage
-        /// </summary>
-        /// <param name="time"></param>
-        public void WriteToIso(int time)
-        {
-            isoStorageHandler.WriteToStorage(time);
-        }
+        }        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -345,6 +342,16 @@ namespace ThreadingProject
         private void timer_ValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        // -------- Isolated Storage ---------
+        /// <summary>
+        /// Write to Iso Storage
+        /// </summary>
+        /// <param name="time"></param>
+        public void WriteToIso(int time)
+        {
+            isoStorageHandler.WriteToStorage(time);
         }
     }
 }

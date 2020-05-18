@@ -46,7 +46,7 @@ namespace ThreadingProject
         public void UpdateGlobal()
         {
             time = time + 10;
-            mainClass.SetTotalTimeLabel("Combined time elasped: " + time + " ms.");
+            mainClass.SetTotalTimeLabel("Combined time elapsed: " + time + " ms.");
         }
     }
 }

@@ -13,26 +13,30 @@ namespace ThreadingProject
 {
     class WaitBW //uses BackgroundWorker
     {
+        //interface
+        private ICallBackBW callBackBW;
+
         private Object syncObj = new Object();
         private ProgressBar progressBar;
         private Label label;
-        private int time;               
-        private int timeElapsed;
         private BackgroundWorker bw;
+
+
+        private int time;                       // time to process, allready divided by the amount of bw               
+        private int timeElapsed;
         private float percentComplete;
-        private ICallBackBW callBackBW;
 
-
+        //constructor
         public WaitBW(ProgressBar pb, Label label, ICallBackBW callBackBW)
         {
             progressBar = pb;
             this.label = label;
-            this.callBackBW = callBackBW;
-            
+            this.callBackBW = callBackBW;            
 
-            bw = new BackgroundWorker(); //not Started yet
+            bw = new BackgroundWorker(); 
             bw.DoWork += new DoWorkEventHandler(DoWork);
 
+            // make sure progress can be reported and cancellation pending will be set 
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
 
@@ -41,7 +45,7 @@ namespace ThreadingProject
         }
 
         /// <summary>
-        /// Start BackgroundWorker
+        /// Start BackgroundWorker and pass over divided time
         /// </summary>
         /// <param name="time"></param>
         public void StartWorker(int time) 
@@ -126,7 +130,8 @@ namespace ThreadingProject
 
         private void UpdateGlobalProgress()
         {
-            lock (syncObj) //Lock the Code so only one Thread at the time can access it. Resource Sharing / Blocking
+            //Lock the Code so only one Thread at the time can access it. Resource Sharing / Blocking
+            lock (syncObj) 
             {
                 callBackBW.UpdateGlobal();
             }

@@ -25,8 +25,10 @@ namespace ThreadingProject
 
         public IsoStorageHandler()
         {
+            //set name of folder and path to save Isolated Storage file
             folderName = "ThreadResults";
             pathToTextFile = String.Format("{0}\\results.txt", folderName);
+            // set store to user and assembly
             store = IsolatedStorageFile.GetUserStoreForAssembly();
         }
 
@@ -39,10 +41,10 @@ namespace ThreadingProject
             {
                 try
                 {
+                    //check if folder allready exists. if not create it
                     if (!store.DirectoryExists(folderName))
                         store.CreateDirectory(folderName);
-
-                    //Change FileMode if you need to reuse the txt etc.
+                                       
                     using (IsolatedStorageFileStream isoStream = store.OpenFile(pathToTextFile, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         using (StreamWriter writer = new StreamWriter(isoStream))
