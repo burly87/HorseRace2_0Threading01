@@ -36,8 +36,8 @@ namespace ThreadingProject
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
 
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(runWorkerCompleted);
-            bw.ProgressChanged += new ProgressChangedEventHandler(progessChanged);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
+            bw.ProgressChanged += new ProgressChangedEventHandler(ProgessChanged);
         }
 
         /// <summary>
@@ -68,7 +68,6 @@ namespace ThreadingProject
         /// <param name="e"></param>
         private void DoWork(object sender, DoWorkEventArgs e) 
         {
-
             for (int i = 10; i <= time; i = i+10)
             {
                 timeElapsed = i;
@@ -94,7 +93,7 @@ namespace ThreadingProject
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void runWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // handle error
             if (e.Error != null)
@@ -118,14 +117,14 @@ namespace ThreadingProject
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void progessChanged(object sender, ProgressChangedEventArgs e)
+        private void ProgessChanged(object sender, ProgressChangedEventArgs e)
         {
             this.progressBar.Value = e.ProgressPercentage;
             this.label.Text = (Math.Round((timeElapsed/(float)1000),1).ToString());
-            updateGlobalProgress();
+            UpdateGlobalProgress();
         }
 
-        private void updateGlobalProgress()
+        private void UpdateGlobalProgress()
         {
             lock (syncObj) //Lock the Code so only one Thread at the time can access it. Resource Sharing / Blocking
             {
