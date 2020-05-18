@@ -35,24 +35,23 @@ namespace ThreadingProject
             int[] numbers = { 1, 2, 3, 4 };
 
             //numbericUpDown to choose how long the threads should run
-            timer.Maximum = 2000;
-            timer.Minimum = 0;
+            num_Timer.Maximum = 2000;
+            num_Timer.Minimum = 0;
 
             //comboBox number to choose how many threads to run
-            number.DataSource = numbers;
-            number.SelectedIndex = 0;
+            cb_ThreadCount.DataSource = numbers;
+            cb_ThreadCount.SelectedIndex = 0;
 
             //Dictionary choises to populate the threads CB
             Dictionary<int, string> choices = new Dictionary<int, string>();
             choices.Add(1, "Threads");
-            choices.Add(2, "Threads Queue");
-            choices.Add(3, "Background Worker");
+            choices.Add(2, "Background Worker");
 
             //comboBox threads to pick if BW or Threads to run
-            threads.DataSource = new BindingSource(choices, null);
-            threads.DisplayMember = "Value";
-            threads.ValueMember = "Key";
-            threads.SelectedIndex = 0;
+            cb_TypeOfThread.DataSource = new BindingSource(choices, null);
+            cb_TypeOfThread.DisplayMember = "Value";
+            cb_TypeOfThread.ValueMember = "Key";
+            cb_TypeOfThread.SelectedIndex = 0;
 
             //Isolated Storage
             isoStorageHandler = new IsoStorageHandler();
@@ -64,19 +63,19 @@ namespace ThreadingProject
         /// </summary>
         private void UpdateView()
         {
-            if (threads.SelectedItem != null && number.SelectedItem != null) //For first Start
+            if (cb_TypeOfThread.SelectedItem != null && cb_ThreadCount.SelectedItem != null) //For first Start
             {
-                var selectedItem = (KeyValuePair<int, string>)threads.SelectedItem;
+                var selectedItem = (KeyValuePair<int, string>)cb_TypeOfThread.SelectedItem;
 
                 //select Threads
-                if (selectedItem.Key == 1 || selectedItem.Key == 2)
+                if (selectedItem.Key == 1)
                 {
                     mainPanel.Controls.Clear();
 
                     threadLabels = new ArrayList();
 
 
-                    for (int i = 0; i < (int)number.SelectedItem; i++)
+                    for (int i = 0; i < (int)cb_ThreadCount.SelectedItem; i++)
                     {
                         FlowLayoutPanel panel = new FlowLayoutPanel();
                         panel.AutoScroll = true;
@@ -104,7 +103,7 @@ namespace ThreadingProject
                     mainPanel.Controls.Clear();
                     bwArray = new ArrayList();
 
-                    for (int i = 0; i < (int)number.SelectedItem; i++)
+                    for (int i = 0; i < (int)cb_ThreadCount.SelectedItem; i++)
                     {
                         FlowLayoutPanel panel = new FlowLayoutPanel();
                         panel.AutoScroll = true;
@@ -144,19 +143,19 @@ namespace ThreadingProject
         {
             if (disable)
             {
-                threads.Enabled = false;
-                number.Enabled = false;
-                timer.Enabled = false;
+                cb_TypeOfThread.Enabled = false;
+                cb_ThreadCount.Enabled = false;
+                num_Timer.Enabled = false;
                 isRunning = true;
-                startStop.Text = "Stop";
+                btn_StartStop.Text = "Stop";
             }
             else
             {
-                threads.Enabled = true;
-                number.Enabled = true;
-                timer.Enabled = true;
+                cb_TypeOfThread.Enabled = true;
+                cb_ThreadCount.Enabled = true;
+                num_Timer.Enabled = true;
                 isRunning = false;
-                startStop.Text = "Start";
+                btn_StartStop.Text = "Start";
             }
 
         }
@@ -169,11 +168,11 @@ namespace ThreadingProject
         private void startStop_Click(object sender, EventArgs e)
         {
             // get Item from ComboBox to decide what to do
-            var selectedItem = (KeyValuePair<int, string>)threads.SelectedItem;
+            var selectedItem = (KeyValuePair<int, string>)cb_TypeOfThread.SelectedItem;
             // get time placed in timer
-            int time = ((int)timer.Value * 1000);
+            int time = ((int)num_Timer.Value * 1000);
             // get number of Threads selected (max 4)
-            int numberOfThreads = (int)number.SelectedItem;
+            int numberOfThreads = (int)cb_ThreadCount.SelectedItem;
 
             if (!isRunning)
             {
@@ -181,12 +180,12 @@ namespace ThreadingProject
                 // Test if Start is divideable by No. of Threads so they can share the work
                 if (time % numberOfThreads == 0)
                 {
-                    if (selectedItem.Key == 1 || selectedItem.Key == 2)
+                    if (selectedItem.Key == 1)
                     {
 
                         //wT = new WaitThread(time/numberOfThreads, numberOfThreads, this);
                         wT.SetTime(time, numberOfThreads);
-                        wT.Start(selectedItem.Key);
+                        wT.Start();
                         BlockControls(true);
                         foreach (Label label in threadLabels)
                         {
@@ -263,7 +262,7 @@ namespace ThreadingProject
         public void onThreadEvent(object src, ThreadEventArgs args)
         {
             // 
-            if (timer.InvokeRequired)
+            if (num_Timer.InvokeRequired)
             {
                 // status finished work -> set labels
                 if (args.status == 1)
@@ -339,6 +338,11 @@ namespace ThreadingProject
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer_ValueChanged(object sender, EventArgs e)
         {
 
         }

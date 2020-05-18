@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows.Forms;       //to use messageBox.Show etc.
-
+using System.Threading;
 
 namespace ThreadingProject
 {
@@ -35,7 +35,7 @@ namespace ThreadingProject
         {
             if (store == null) return;
             // need to sync the method because different threads will have access to it
-            lock (syncObj)
+            Monitor.Enter(syncObj);
             {
                 try
                 {
@@ -43,7 +43,7 @@ namespace ThreadingProject
                         store.CreateDirectory(folderName);
 
                     //Change FileMode if you need to reuse the txt etc.
-                    using (IsolatedStorageFileStream isoStream = store.OpenFile(pathToTextFile, FileMode.Create, FileAccess.Write))
+                    using (IsolatedStorageFileStream isoStream = store.OpenFile(pathToTextFile, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         using (StreamWriter writer = new StreamWriter(isoStream))
                         {
@@ -56,6 +56,11 @@ namespace ThreadingProject
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
+                }
+                finally
+                {
+                    Monitor.Pulse(syncObj);
+                    Monitor.Exit(syncObj);
                 }
             }
         }
